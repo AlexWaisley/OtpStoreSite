@@ -5,7 +5,7 @@ import { TotpForm } from '../models/TotpForm';
 import toastr from 'toastr';
 import 'toastr/toastr.scss';
 
-import { useTotpStore } from '../storage/totpInfoStorage';
+import { useTotpStore } from '../stores/totpInfoStorage';
 const totpStore = useTotpStore();
 
 const totpData = ref<TotpForm>({

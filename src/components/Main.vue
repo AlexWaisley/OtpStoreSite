@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TotpContainer from './TotpContainer.vue';
 import AddTotpForm from './AddTotpForm.vue';
-import { useTotpStore } from '../storage/totpInfoStorage';
+import { useTotpStore } from '../stores/totpInfoStorage';
 
 const totpStore = useTotpStore();
 </script>

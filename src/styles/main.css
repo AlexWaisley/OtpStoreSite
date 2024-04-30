@@ -39,20 +39,3 @@ input {
   border: 1px solid #ccc;
   max-width: 100%;
 }
-
-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-
-  circle {
-    fill: #fff;
-    stroke: #000;
-    stroke-width: 5px;
-    stroke-dasharray: 450;
-    stroke-dashoffset: 0;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: all 0.5s ease;
-  }
-}

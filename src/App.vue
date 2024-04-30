@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Main from './components/Main.vue';
-import { useTotpStore } from './storage/totpInfoStorage';
+import { useTotpStore } from './stores/totpInfoStorage';
 
 const totpStore = useTotpStore();
 </script>

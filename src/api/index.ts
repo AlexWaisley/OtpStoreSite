@@ -36,7 +36,7 @@ export const api = {
         }
         catch (ex) {
             console.log(ex);
-            return {Name: '', Pass: '', DigitsCount: 0, IsDeleted: false};
+            return {name: '', key: '', digitsCount: 0, isDeleted: false};
         }
     },
     async deleteTotp(key: string):Promise<TotpForm>{
@@ -48,7 +48,7 @@ export const api = {
         }
         catch (ex) {
             console.log(ex);
-            return {Name: '', Pass: '', DigitsCount: 0, IsDeleted: false};
+            return {name: '', key: '', digitsCount: 0, isDeleted: false};
         }
     }
 }as const;
