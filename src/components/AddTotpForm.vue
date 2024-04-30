@@ -1,18 +1,17 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import { TotpForm } from '../models/TotpForm';
+import { TotpCreateRequest } from '../models';
 import toastr from 'toastr';
 import 'toastr/toastr.scss';
 
 import { useTotpStore } from '../stores/totpInfoStorage';
 const totpStore = useTotpStore();
 
-const totpData = ref<TotpForm>({
+const newTotpRequest = ref<TotpCreateRequest>({
     name: '',
-    key: '',
-    digitsCount: 6,
-    isDeleted: false
+    secretKey: '',
+    digitsCount: 6
 });
 const isCreatingNewInstance = ref(false);
 
@@ -21,19 +20,19 @@ const showForm = () => {
 }
 
 const addTotp = () => {
-    if (!totpData.value.name || !totpData.value.key) {
+    if (!newTotpRequest.value.name || !newTotpRequest.value.secretKey) {
         toastr.error('Name and key are required');
         return;
     }
+    newTotpRequest.value.secretKey = newTotpRequest.value.secretKey.replace(/\s/g, '');
 
-    totpStore.addTotp(totpData.value);
+    totpStore.addTotp(newTotpRequest.value);
     isCreatingNewInstance.value = false;
 
-    totpData.value = {
+    newTotpRequest.value = {
         name: '',
-        key: '',
-        digitsCount: 6,
-        isDeleted: false
+        secretKey: '',
+        digitsCount: 6
     };
 }
 
@@ -43,14 +42,14 @@ const addTotp = () => {
     <div class="add-totp-form">
         <div v-if="isCreatingNewInstance" class="creating-new-instance">
             <label for="Name">Service or application name:</label>
-            <input autocomplete="off" type="text" name="Name" v-model="totpData.name" placeholder="Name" />
+            <input autocomplete="off" type="text" name="Name" v-model="newTotpRequest.name" placeholder="Name" />
 
             <label for="SecretKey">Secret key:</label>
-            <input autocomplete="off" type="text" name="SecretKey" v-model="totpData.key" class="key"
+            <input autocomplete="off" type="text" name="SecretKey" v-model="newTotpRequest.secretKey" class="key"
                 placeholder="JBSWY3DPEHPK3PXP" />
 
             <label for="DigitsCount">Digits count in totp:</label>
-            <input type="number" name="DigitsCount" v-model="totpData.digitsCount" placeholder="6" />
+            <input type="number" name="DigitsCount" v-model="newTotpRequest.digitsCount" placeholder="6" />
 
             <button @click="addTotp">Add</button>
             <button @click="isCreatingNewInstance = false">Cancel</button>

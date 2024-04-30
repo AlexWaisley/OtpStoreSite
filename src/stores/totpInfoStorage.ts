@@ -1,36 +1,39 @@
 import { defineStore } from "pinia";
-import { TotpForm } from "../models/TotpForm";
+import { TotpCreateRequest, TotpDto } from "../models";
 import {ref, onMounted} from 'vue';
 import { api } from "../api";
 import moment from "moment";
 
 export const useTotpStore = defineStore('TotpInfoStore',()=>{
-    const totpList = ref<TotpForm[]>([]);
+    const totpList = ref<TotpDto[]>([]);
     const isReady = ref(false);
     const timeToUpdate = ref(0);
 
     onMounted(async()=>{
-        totpList.value = await load();
+        await fetchTotpList();
         isReady.value = true;
         update();
     });
     
-    const load = async ():Promise<TotpForm[]>=>{
+    const fetchTotpList = async ()=>{
         const list = await api.getTotpList();
-        return list;
+        totpList.value = list;
+        return;
     }
 
-    const addTotp = async (totp: TotpForm)=>{
-        await api.postTotp(totp);
-        totpList.value = await load();
+    const addTotp = async (totp: TotpCreateRequest)=>{
+        const result = await api.postTotp(totp);
+        totpList.value.push(result);
+        await fetchTotpList();
     }
 
-    const deleteTotp = async (key: string)=>{
-        await api.deleteTotp(key);
-        totpList.value = await load();
+    const deleteTotp = async (id: string)=>{
+        totpList.value = totpList.value.filter(totp=>totp.id !== id);
+        await api.deleteTotp(id);
+        await fetchTotpList();
     }
 
-    const update = async () => {
+    const update = () => {
         const now = moment().unix();
         const reminder = now % 30;
         const needTime = 30 - reminder;
@@ -38,10 +41,10 @@ export const useTotpStore = defineStore('TotpInfoStore',()=>{
         timeToUpdate.value = needTime;
 
         setTimeout(async() => {
-            totpList.value = await load();
+            await fetchTotpList();
             setInterval(async () => {
-                totpList.value = await load();
-            }, 30000);
+                await fetchTotpList();
+            }, 15000);
         }, needTime * 1000);        
     }
     
@@ -50,7 +53,7 @@ export const useTotpStore = defineStore('TotpInfoStore',()=>{
         totpList,
         isReady,
         timeToUpdate,
-        load,
+        fetchTotpList,
         addTotp,
         deleteTotp
     }

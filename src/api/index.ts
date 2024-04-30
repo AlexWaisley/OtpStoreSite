@@ -1,54 +1,24 @@
-import axios, {AxiosResponse} from "axios";
-import { TotpForm } from "../models/TotpForm";
+import axios from "axios";
+import { TotpDto, TotpCreateRequest } from "../models";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 export const api = {
-    async getTotpList():Promise<TotpForm[]>{
-        try {
-            const response: AxiosResponse<TotpForm[]> = await axios.get(`${apiUrl}/api/Totp`);
-            const {data, status} = response;
-            console.log('[api]', 'Fetch totpList result', status);
-            return data;
-        }
-        catch (ex) {
-            console.log(ex);
-            return [];
-        }
+
+    async getTotpList():Promise<TotpDto[]>{
+        const {data, status} = await axios.get<TotpDto[]>(`${apiUrl}/totp`);
+        console.log('[api]', 'Fetch totpList result', status);
+        return data;
     },
-    async getTotp(key: string):Promise<string>{
-        try {
-            const response: AxiosResponse<string> = await axios.get(`${apiUrl}/api/Totp/${key}`);
-            const {data, status} = response;
-            console.log('[api]', 'Fetch totp result', status);
-            return data;
-        }
-        catch (ex) {
-            console.log(ex);
-            return "";
-        }
+
+    async postTotp(totp: TotpCreateRequest):Promise<TotpDto>{
+        const {data, status} = await axios.post(`${apiUrl}/totp`, totp);
+        console.log('[api]', 'Post totp result', status);
+        return data;
     },
-    async postTotp(totp: TotpForm):Promise<TotpForm>{
-        try {
-            const response: AxiosResponse<TotpForm> = await axios.post(`${apiUrl}/api/Totp`, totp);
-            const {data, status} = response;
-            console.log('[api]', 'Post totp result', status);
-            return data;
-        }
-        catch (ex) {
-            console.log(ex);
-            return {name: '', key: '', digitsCount: 0, isDeleted: false};
-        }
-    },
-    async deleteTotp(key: string):Promise<TotpForm>{
-        try {
-            const response: AxiosResponse<TotpForm> = await axios.delete(`${apiUrl}/api/Totp/${key}`);
-            const {data, status} = response;
-            console.log('[api]', 'Delete totp result', status);
-            return data;
-        }
-        catch (ex) {
-            console.log(ex);
-            return {name: '', key: '', digitsCount: 0, isDeleted: false};
-        }
+
+    async deleteTotp(id: string){
+        const {status} = await axios.delete(`${apiUrl}/totp/${id}`);
+        console.log('[api]', 'Delete totp result', status);
+        return;
     }
 }as const;

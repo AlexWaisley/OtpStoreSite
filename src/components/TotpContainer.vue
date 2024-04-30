@@ -2,7 +2,7 @@
 
 import { defineProps, ref, watch } from 'vue';
 
-import { TotpForm } from '../models/TotpForm';
+import { TotpDto } from '../models';
 import DeleteConfirmForm from './DeleteConfirmForm.vue';
 
 const props = defineProps<{
@@ -13,18 +13,23 @@ import { useTotpStore } from '../stores/totpInfoStorage';
 const totpStore = useTotpStore();
 const timeToNextUpdate = ref(totpStore.timeToUpdate);
 
-const totpData = ref<TotpForm>({
+const totpData = ref<TotpDto>({
+    id: '',
     name: '',
-    key: '',
-    digitsCount: 0,
-    isDeleted: false
+    code: ''
 });
 const isDeleting = ref(false);
 
 totpData.value = totpStore.totpList[props.index];
 
-const deleteTotp = () => {
+const startDeleteTotp = () => {
     isDeleting.value = true;
+}
+
+const deleteTotp = () => {
+    console.log('deleting totp');
+    totpStore.deleteTotp(totpData.value.id);
+    isDeleting.value = false;
 }
 
 watch(() => totpStore.totpList, () => {
@@ -41,11 +46,11 @@ setInterval(() => {
 </script>
 
 <template>
-    <DeleteConfirmForm v-if="isDeleting" @approve="totpStore.deleteTotp(totpData.name)" @cancel="isDeleting = false" />
+    <DeleteConfirmForm v-if="isDeleting" @approve="deleteTotp" @cancel="isDeleting = false" />
     <div class="totp-container">
         <div class="totp">
             <div class="totp__label">{{ totpData.name }}</div>
-            <div class="totp__value">{{ totpData.key }}</div>
+            <div class="totp__value">{{ totpData.code }}</div>
             <div class="totp__time">
                 <div class="progress-circle">
                     <div class="circle"> </div>
@@ -54,7 +59,7 @@ setInterval(() => {
                     </div>
                 </div>
             </div>
-            <div class="delete__btn" @click="deleteTotp">
+            <div class="delete__btn" @click="startDeleteTotp">
                 <img src="/trash.svg" alt="Delete" />
             </div>
         </div>

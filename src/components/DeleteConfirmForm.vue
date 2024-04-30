@@ -1,13 +1,11 @@
 <script setup lang="ts">
-//return emit to the parent component
-import { defineEmits } from 'vue';
 const emits = defineEmits(['approve', 'cancel']);
 </script>
 <template>
     <div class="delete-confirm">
         <div class="delete-confirm__content">
             <p>Are you sure you want to delete this totp?</p>
-            <button @emit="$emit('approve')" class="approve">Yes</button>
+            <button @click="$emit('approve')" class="approve">Yes</button>
             <button @click="$emit('cancel')" class="reject">No</button>
         </div>
     </div>
