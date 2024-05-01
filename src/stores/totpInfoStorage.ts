@@ -8,15 +8,28 @@ export const useTotpStore = defineStore('TotpInfoStore',()=>{
     const totpList = ref<TotpDto[]>([]);
     const isReady = ref(false);
     const timeToUpdate = ref(0);
+    const isListLoaded = ref(true);
 
     onMounted(async()=>{
+        await startSite();
+    });
+
+    const startSite = async()=>{    
         await fetchTotpList();
+        if(!isListLoaded.value){
+            return;
+        }
         isReady.value = true;
         update();
-    });
+        return;
+    }
     
     const fetchTotpList = async ()=>{
         const list = await api.getTotpList();
+        if(!list){
+            isListLoaded.value = false;
+            return;
+        }
         totpList.value = list;
         return;
     }

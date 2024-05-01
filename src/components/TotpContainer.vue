@@ -11,7 +11,8 @@ const props = defineProps<{
 
 import { useTotpStore } from '../stores/totpInfoStorage';
 const totpStore = useTotpStore();
-const timeToNextUpdate = ref(totpStore.timeToUpdate);
+const timeToNextUpdateMoreAccurate = ref(totpStore.timeToUpdate);
+const timeTonextUpdate = ref(totpStore.timeToUpdate);
 
 const totpData = ref<TotpDto>({
     id: '',
@@ -37,11 +38,17 @@ watch(() => totpStore.totpList, () => {
 });
 
 setInterval(() => {
-    timeToNextUpdate.value--;
-    if (timeToNextUpdate.value === 0) {
-        timeToNextUpdate.value = 30;
+    timeToNextUpdateMoreAccurate.value -= 0.05;
+    if (timeToNextUpdateMoreAccurate.value <= 0) {
+        timeToNextUpdateMoreAccurate.value = 30;
     }
-}, 1000);
+}, 50);
+setInterval(() => {
+    timeTonextUpdate.value = Math.floor(timeToNextUpdateMoreAccurate.value);
+    if (timeTonextUpdate.value <= 0) {
+        timeTonextUpdate.value = 30;
+    }
+}, 500);
 
 </script>
 
@@ -55,7 +62,7 @@ setInterval(() => {
                 <div class="progress-circle">
                     <div class="circle"> </div>
                     <div class="progress-number">
-                        {{ timeToNextUpdate }}
+                        {{ timeTonextUpdate }}
                     </div>
                 </div>
             </div>
@@ -67,14 +74,22 @@ setInterval(() => {
 </template>
 
 <style scoped lang="scss">
-$percentComplete: calc(100% / 30 * v-bind(timeToNextUpdate));
+$percentComplete: calc(100% / 30 * v-bind(timeToNextUpdateMoreAccurate));
+
+
 
 .totp-container {
     padding: 2rem;
     display: flex;
-    background-color: #fff;
     border-radius: 1rem;
     width: max(60%, 360px);
+    max-width: 900px;
+    height: 100px;
+    background: linear-gradient(-45deg, #cd4e4eaa, #e16a98aa, #66bdddaa, #62d0b6aa);
+    background-position: calc(100% - $percentComplete);
+    background-size: 400% 400%;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
     .totp {
         width: 100%;
@@ -115,7 +130,7 @@ $percentComplete: calc(100% / 30 * v-bind(timeToNextUpdate));
                     width: 100%;
                     height: 100%;
                     border-radius: 50%;
-                    background: conic-gradient(#86dbff $percentComplete, #f1f1f1 0% 100%);
+                    background: conic-gradient(#ffd5ef $percentComplete, #f1f1f1 0% 100%);
                     position: absolute;
                 }
 
@@ -142,9 +157,10 @@ $percentComplete: calc(100% / 30 * v-bind(timeToNextUpdate));
             justify-content: center;
             align-items: center;
             flex-shrink: 1;
+            cursor: pointer;
 
             &:hover {
-                background-color: #f1f1f1;
+                background-color: #f1f1f135;
             }
         }
     }

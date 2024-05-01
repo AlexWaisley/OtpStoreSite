@@ -4,10 +4,17 @@ import { TotpDto, TotpCreateRequest } from "../models";
 const apiUrl = import.meta.env.VITE_API_URL;
 export const api = {
 
-    async getTotpList():Promise<TotpDto[]>{
+    async getTotpList():Promise<TotpDto[]|null>{
+        try{
         const {data, status} = await axios.get<TotpDto[]>(`${apiUrl}/totp`);
         console.log('[api]', 'Fetch totpList result', status);
+        console.log('[api]', 'Fetch totpList data', data);
         return data;
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
     },
 
     async postTotp(totp: TotpCreateRequest):Promise<TotpDto>{

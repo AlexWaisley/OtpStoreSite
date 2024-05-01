@@ -19,7 +19,8 @@ const totpStore = useTotpStore();
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #f0f0f0;
+    background: linear-gradient(109.6deg, rgb(255, 221, 225) 11.2%, rgb(255, 255, 255) 92.2%);
+    justify-content: center;
 
     .container {
         max-width: 100%;
