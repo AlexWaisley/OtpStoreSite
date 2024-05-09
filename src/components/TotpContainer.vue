@@ -5,14 +5,15 @@ import { defineProps, ref, watch } from 'vue';
 import { TotpDto } from '../models';
 import DeleteConfirmForm from './DeleteConfirmForm.vue';
 
-const props = defineProps<{
-    index: number;
-}>();
-
 import { useTotpStore } from '../stores/totpInfoStorage';
 const totpStore = useTotpStore();
 const timeToNextUpdateMoreAccurate = ref(totpStore.timeToUpdate);
 const timeTonextUpdate = ref(totpStore.timeToUpdate);
+
+const props = defineProps<{
+    index: number;
+}>();
+
 
 const totpData = ref<TotpDto>({
     id: '',

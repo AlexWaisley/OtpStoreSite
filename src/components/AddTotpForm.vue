@@ -15,6 +15,10 @@ const newTotpRequest = ref<TotpCreateRequest>({
 });
 const isCreatingNewInstance = ref(false);
 
+if (totpStore.totpList.length === 0) {
+    isCreatingNewInstance.value = true;
+}
+
 const showForm = () => {
     isCreatingNewInstance.value = true;
 }
@@ -25,6 +29,8 @@ const addTotp = () => {
         return;
     }
     newTotpRequest.value.secretKey = newTotpRequest.value.secretKey.replace(/\s/g, '');
+    newTotpRequest.value.secretKey = newTotpRequest.value.secretKey.replace(/-/g, '');
+
 
     totpStore.addTotp(newTotpRequest.value);
     isCreatingNewInstance.value = false;

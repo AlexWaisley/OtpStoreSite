@@ -47,6 +47,9 @@ const ChooseMacOs = () => {
             <div class="download-page__bottom">
                 <p>Oops! It looks like you haven't installed the necessary application for the site to function
                     properly.</p>
+                <p>If you wan to see source code
+                    <a target="_blank" href="https://github.com/AlexWaisley/OtpSecureStorageApi">click here</a>
+                </p>
             </div>
         </div>
     </div>
@@ -139,6 +142,15 @@ const ChooseMacOs = () => {
             padding: 20px;
             border-top: 1px solid #f5f5f5;
             text-align: center;
+
+            a {
+                color: #ff9f9f;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
     }
 }
